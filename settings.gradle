@@ -1,0 +1,5 @@
+rootProject.name = "LavaLyrics"
+include(":main")
+include(":plugin")
+include(":plugin-api")
+include(":protocol")
