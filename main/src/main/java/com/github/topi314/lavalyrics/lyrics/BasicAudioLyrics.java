@@ -1,17 +1,22 @@
-package com.github.topi314.lavalyrics.result;
+package com.github.topi314.lavalyrics.lyrics;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 
 public class BasicAudioLyrics implements AudioLyrics {
 
+	protected String sourceName;
 	protected String text;
 	protected List<AudioLyrics.Line> lines;
 
-	public BasicAudioLyrics(String text, List<AudioLyrics.Line> lines) {
+	public BasicAudioLyrics(String sourceName, String text, List<AudioLyrics.Line> lines) {
+		this.sourceName = sourceName;
 		this.text = text;
 		this.lines = lines;
+	}
+
+	public String getSourceName() {
+		return this.sourceName;
 	}
 
 	public String getText() {

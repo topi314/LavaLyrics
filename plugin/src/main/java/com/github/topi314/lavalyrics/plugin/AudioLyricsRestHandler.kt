@@ -25,10 +25,10 @@ class AudioLyricsRestHandler(
         private val log = LoggerFactory.getLogger(AudioLyricsRestHandler::class.java)
     }
 
-    fun socketContext(socketServer: ISocketServer, sessionId: String) =
+    private fun socketContext(socketServer: ISocketServer, sessionId: String) =
         socketServer.contextMap[sessionId] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found")
 
-    fun existingPlayer(socketContext: ISocketContext, guildId: Long) =
+    private fun existingPlayer(socketContext: ISocketContext, guildId: Long) =
         socketContext.players[guildId] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Player not found")
 
     @GetMapping("/v4/sessions/{sessionId}/players/{guildId}/track/lyrics")
@@ -45,7 +45,6 @@ class AudioLyricsRestHandler(
         }
 
         val lyrics = lyricsManager.loadLyrics(player.track)
-
         return if (lyrics != null) {
             ResponseEntity.ok(lyrics.toLyrics(pluginInfoModifiers))
         } else ResponseEntity.noContent().build()

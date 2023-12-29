@@ -1,6 +1,6 @@
 package com.github.topi314.lavalyrics.api
 
-import com.github.topi314.lavalyrics.result.AudioLyrics
+import com.github.topi314.lavalyrics.lyrics.AudioLyrics
 import kotlinx.serialization.json.JsonObject
 
 interface LyricsPluginInfoModifier {

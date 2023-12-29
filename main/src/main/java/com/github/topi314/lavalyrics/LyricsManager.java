@@ -1,10 +1,11 @@
 package com.github.topi314.lavalyrics;
 
-import com.github.topi314.lavalyrics.result.AudioLyrics;
+import com.github.topi314.lavalyrics.lyrics.AudioLyrics;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class LyricsManager {
@@ -31,7 +32,7 @@ public class LyricsManager {
 	}
 
 	public List<AudioLyricsManager> getLyricsManagers() {
-		return this.lyricsManagers;
+		return Collections.unmodifiableList(this.lyricsManagers);
 	}
 
 	public void shutdown() {
@@ -46,8 +47,8 @@ public class LyricsManager {
 			throw new IllegalStateException("No lyrics managers registered");
 		}
 		var trackLyricsManager = track.getSourceManager();
-		if (trackLyricsManager != null && trackLyricsManager instanceof AudioLyricsManager) {
-			var lyrics = ((AudioLyricsManager)trackLyricsManager).loadLyrics(track);
+		if (trackLyricsManager instanceof AudioLyricsManager) {
+			var lyrics = ((AudioLyricsManager) trackLyricsManager).loadLyrics(track);
 			if (lyrics != null) {
 				return lyrics;
 			}
