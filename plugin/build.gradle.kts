@@ -30,6 +30,7 @@ dependencies {
     implementation(project(":main"))
     implementation(project(":protocol"))
     implementation(project(":plugin-api"))
+    compileOnly("dev.arbjerg.lavalink:Lavalink-Server:436763fe09b32fe26ee40cd238e3d1e910749cf9-SNAPSHOT")
 }
 
 publishing {

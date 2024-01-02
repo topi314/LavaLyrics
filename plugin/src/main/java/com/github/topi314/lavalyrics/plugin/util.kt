@@ -15,7 +15,7 @@ fun AudioLyrics.toLyrics(lyricsInfoModifiers: List<LyricsPluginInfoModifier>): L
         acc + jsonObject
     }
 
-    return Lyrics(text, sourceName, lines.map { it.toLine(lyricsInfoModifiers) }, plugin)
+    return Lyrics(sourceName, text, lines.map { it.toLine(lyricsInfoModifiers) }, plugin)
 }
 
 fun AudioLyrics.Line.toLine(lyricsInfoModifiers: List<LyricsPluginInfoModifier>): Line {
@@ -26,6 +26,5 @@ fun AudioLyrics.Line.toLine(lyricsInfoModifiers: List<LyricsPluginInfoModifier>)
 
     return Line(timestamp.toKotlinDuration(), duration.toKotlinDuration(), line, plugin)
 }
-
 
 private operator fun JsonObject.plus(other: JsonObject) = JsonObject(this + (other as Map<String, JsonElement>))
