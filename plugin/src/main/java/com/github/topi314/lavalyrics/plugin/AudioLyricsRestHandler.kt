@@ -40,7 +40,7 @@ class AudioLyricsRestHandler(
         request: HttpServletRequest,
         @PathVariable sessionId: String,
         @PathVariable guildId: String,
-        @RequestParam skipTrackSource: Boolean
+        @RequestParam skipTrackSource: Boolean = false
     ): ResponseEntity<Lyrics> {
         log.debug("getCurrentTrackLyrics called with sessionId: {}, guildId: {}, skipTrackSource: {}", sessionId, guildId, skipTrackSource)
         val socketContext = socketContext(socketServer, sessionId)
@@ -59,7 +59,7 @@ class AudioLyricsRestHandler(
     fun loadLyrics(
         request: HttpServletRequest,
         @RequestParam encodedTrack: String,
-        @RequestParam skipTrackSource: Boolean
+        @RequestParam skipTrackSource: Boolean = false
     ): ResponseEntity<Lyrics> {
         log.debug("loadLyrics called with encodedTrack: {}, skipTrackSource: {}", encodedTrack, skipTrackSource)
         val track = decodeTrack(audioPlayerManager, encodedTrack)
