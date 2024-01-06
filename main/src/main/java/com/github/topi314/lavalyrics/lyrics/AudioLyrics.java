@@ -12,7 +12,7 @@ public interface AudioLyrics {
 	String getSourceName();
 
 	@Nullable
-	String getOriginalSourceName();
+	String getProvider();
 
 	@Nullable
 	String getText();

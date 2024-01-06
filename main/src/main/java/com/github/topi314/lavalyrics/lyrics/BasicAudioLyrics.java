@@ -9,13 +9,13 @@ import java.util.List;
 public class BasicAudioLyrics implements AudioLyrics {
 
 	protected String sourceName;
-	protected String originalSourceName;
+	protected String provider;
 	protected String text;
 	protected List<AudioLyrics.Line> lines;
 
-	public BasicAudioLyrics(String sourceName, String originalSourceName, String text, List<AudioLyrics.Line> lines) {
+	public BasicAudioLyrics(String sourceName, String provider, String text, List<AudioLyrics.Line> lines) {
 		this.sourceName = sourceName;
-		this.originalSourceName = originalSourceName;
+		this.provider = provider;
 		this.text = text;
 		this.lines = lines;
 	}
@@ -26,8 +26,8 @@ public class BasicAudioLyrics implements AudioLyrics {
 	}
 
 	@Nullable
-	public String getOriginalSourceName() {
-		return this.originalSourceName;
+	public String getProvider() {
+		return this.provider;
 	}
 
 	@Nullable

@@ -15,7 +15,7 @@ fun AudioLyrics.toLyrics(lyricsInfoModifiers: List<LyricsPluginInfoModifier>): L
         acc + jsonObject
     }
 
-    return Lyrics(sourceName, originalSourceName, text, lines?.map { it.toLine(lyricsInfoModifiers) }, plugin)
+    return Lyrics(sourceName, provider, text, lines?.map { it.toLine(lyricsInfoModifiers) }, plugin)
 }
 
 fun AudioLyrics.Line.toLine(lyricsInfoModifiers: List<LyricsPluginInfoModifier>): Line {

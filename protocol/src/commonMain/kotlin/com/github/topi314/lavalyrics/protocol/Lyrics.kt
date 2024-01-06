@@ -7,7 +7,7 @@ import kotlin.jvm.JvmField
 @Serializable
 data class Lyrics(
     val sourceName: String,
-    val originalSourceName: String?,
+    val provider: String?,
     val text: String?,
     val lines: List<Line>?,
     val plugin: JsonObject,
