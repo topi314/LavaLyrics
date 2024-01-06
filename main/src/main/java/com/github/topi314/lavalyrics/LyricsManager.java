@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class LyricsManager {
@@ -18,6 +19,10 @@ public class LyricsManager {
 
 	public void registerLyricsManager(AudioLyricsManager lyricsManager) {
 		lyricsManagers.add(lyricsManager);
+	}
+
+	public void sortLyricsManagers(List<String> lyricsManagers) {
+		this.lyricsManagers.sort(Comparator.comparing(audioLyricsManager -> lyricsManagers.contains(audioLyricsManager.getSourceName())));
 	}
 
 	@Nullable
@@ -43,14 +48,21 @@ public class LyricsManager {
 
 	@Nullable
 	public AudioLyrics loadLyrics(AudioTrack track) {
+		return loadLyrics(track, false);
+	}
+
+	@Nullable
+	public AudioLyrics loadLyrics(AudioTrack track, boolean skipTrackSource) {
 		if (this.lyricsManagers.isEmpty()) {
 			throw new IllegalStateException("No lyrics managers registered");
 		}
-		var trackLyricsManager = track.getSourceManager();
-		if (trackLyricsManager instanceof AudioLyricsManager) {
-			var lyrics = ((AudioLyricsManager) trackLyricsManager).loadLyrics(track);
-			if (lyrics != null) {
-				return lyrics;
+		if (!skipTrackSource) {
+			var trackLyricsManager = track.getSourceManager();
+			if (trackLyricsManager instanceof AudioLyricsManager) {
+				var lyrics = ((AudioLyricsManager) trackLyricsManager).loadLyrics(track);
+				if (lyrics != null) {
+					return lyrics;
+				}
 			}
 		}
 		for (var lyricsManager : this.lyricsManagers) {

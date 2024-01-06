@@ -30,35 +30,41 @@ class AudioLyricsRestHandler(
     }
 
     private fun socketContext(socketServer: ISocketServer, sessionId: String) =
-            socketServer.contextMap[sessionId] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found")
+        socketServer.contextMap[sessionId] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found")
 
     private fun existingPlayer(socketContext: ISocketContext, guildId: Long) =
-            socketContext.players[guildId] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Player not found")
+        socketContext.players[guildId] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Player not found")
 
     @GetMapping("/v4/sessions/{sessionId}/players/{guildId}/track/lyrics")
     fun loadCurrentTrackLyrics(
         request: HttpServletRequest,
         @PathVariable sessionId: String,
-        @PathVariable guildId: String
+        @PathVariable guildId: String,
+        @RequestParam skipTrackSource: Boolean
     ): ResponseEntity<Lyrics> {
-        log.debug("getCurrentTrackLyrics called with sessionId: {}, guildId: {}", sessionId, guildId)
+        log.debug("getCurrentTrackLyrics called with sessionId: {}, guildId: {}, skipTrackSource: {}", sessionId, guildId, skipTrackSource)
         val socketContext = socketContext(socketServer, sessionId)
         val player = existingPlayer(socketContext, guildId.toLong())
         if (player.track == null) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "No track playing")
         }
 
-        val lyrics = lyricsManager.loadLyrics(player.track)
+        val lyrics = lyricsManager.loadLyrics(player.track, skipTrackSource)
         return if (lyrics != null) {
             ResponseEntity.ok(lyrics.toLyrics(pluginInfoModifiers))
         } else ResponseEntity.noContent().build()
     }
 
     @GetMapping("/v4/lyrics")
-    fun loadLyrics(request: HttpServletRequest, @RequestParam encodedTrack: String): ResponseEntity<Lyrics> {
-        log.debug("loadLyrics called with encodedTrack: {}", encodedTrack)
+    fun loadLyrics(
+        request: HttpServletRequest,
+        @RequestParam encodedTrack: String,
+        @RequestParam skipTrackSource: Boolean
+    ): ResponseEntity<Lyrics> {
+        log.debug("loadLyrics called with encodedTrack: {}, skipTrackSource: {}", encodedTrack, skipTrackSource)
         val track = decodeTrack(audioPlayerManager, encodedTrack)
-        val lyrics = lyricsManager.loadLyrics(track)
+        val lyrics = lyricsManager.loadLyrics(track, skipTrackSource)
+
         return if (lyrics != null) {
             ResponseEntity.ok(lyrics.toLyrics(pluginInfoModifiers))
         } else ResponseEntity.noContent().build()

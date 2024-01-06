@@ -1,28 +1,41 @@
 package com.github.topi314.lavalyrics.lyrics;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.time.Duration;
 import java.util.List;
 
 public class BasicAudioLyrics implements AudioLyrics {
 
 	protected String sourceName;
+	protected String originalSourceName;
 	protected String text;
 	protected List<AudioLyrics.Line> lines;
 
-	public BasicAudioLyrics(String sourceName, String text, List<AudioLyrics.Line> lines) {
+	public BasicAudioLyrics(String sourceName, String originalSourceName, String text, List<AudioLyrics.Line> lines) {
 		this.sourceName = sourceName;
+		this.originalSourceName = originalSourceName;
 		this.text = text;
 		this.lines = lines;
 	}
 
+	@NotNull
 	public String getSourceName() {
 		return this.sourceName;
 	}
 
+	@Nullable
+	public String getOriginalSourceName() {
+		return this.originalSourceName;
+	}
+
+	@Nullable
 	public String getText() {
 		return this.text;
 	}
 
+	@Nullable
 	public List<AudioLyrics.Line> getLines() {
 		return this.lines;
 	}
@@ -39,14 +52,17 @@ public class BasicAudioLyrics implements AudioLyrics {
 			this.line = line;
 		}
 
+		@NotNull
 		public Duration getTimestamp() {
 			return this.timestamp;
 		}
 
+		@Nullable
 		public Duration getDuration() {
 			return this.duration;
 		}
 
+		@NotNull
 		public String getLine() {
 			return this.line;
 		}
