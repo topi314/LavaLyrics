@@ -1,3 +1,11 @@
+plugins:
+  lavalyrics:
+    # sources is used to sort the different lyrics sources by priority (from highest to lowest)
+    sources:
+      - spotify
+      - youtube
+      - deezer
+
 server: # REST and WS server
   port: 2333
   address: 0.0.0.0

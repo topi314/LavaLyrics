@@ -17,7 +17,7 @@ open class LyricsConfiguration(
             manager = config.configure(manager)
         }
 
-        manager.sortLyricsManagers(config.searchManagers)
+        manager.sortLyricsManagers(config.sources)
         return manager
     }
 }

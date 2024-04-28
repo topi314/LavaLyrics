@@ -11,8 +11,8 @@ base {
 
 lavalinkPlugin {
     name = "lavalyrics-plugin"
-    apiVersion = gitHash("436763fe09b32fe26ee40cd238e3d1e910749cf9")
-    serverVersion = gitHash("436763fe09b32fe26ee40cd238e3d1e910749cf9")
+    apiVersion = gitHash("78c090c4a44860cfee781ee20e1db391b169a7ce")
+    serverVersion = gitHash("78c090c4a44860cfee781ee20e1db391b169a7ce")
     configurePublishing = false
 }
 
@@ -30,7 +30,6 @@ dependencies {
     implementation(project(":main"))
     implementation(project(":protocol"))
     implementation(project(":plugin-api"))
-    compileOnly("dev.arbjerg.lavalink:Lavalink-Server:436763fe09b32fe26ee40cd238e3d1e910749cf9-SNAPSHOT")
 }
 
 publishing {

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component
 @ConfigurationProperties(prefix = "plugins.lavalyrics")
 @Component
 data class LavaLyricsConfig(
-    var searchManagers: List<String> = listOf()
+    var sources: List<String> = listOf()
 )

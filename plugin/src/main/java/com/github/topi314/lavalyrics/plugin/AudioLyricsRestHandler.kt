@@ -4,10 +4,11 @@ import com.github.topi314.lavalyrics.LyricsManager
 import com.github.topi314.lavalyrics.api.LyricsPluginInfoModifier
 import com.github.topi314.lavalyrics.protocol.Lyrics
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
+import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import dev.arbjerg.lavalink.api.ISocketContext
 import dev.arbjerg.lavalink.api.ISocketServer
 import jakarta.servlet.http.HttpServletRequest
-import lavalink.server.util.decodeTrack
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import java.io.ByteArrayInputStream
+import java.util.*
 
 @RestController
 class AudioLyricsRestHandler(
@@ -30,10 +33,16 @@ class AudioLyricsRestHandler(
     }
 
     private fun socketContext(socketServer: ISocketServer, sessionId: String) =
-        socketServer.contextMap[sessionId] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found")
+        socketServer.sessions[sessionId] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found")
 
     private fun existingPlayer(socketContext: ISocketContext, guildId: Long) =
         socketContext.players[guildId] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Player not found")
+
+    private fun decodeTrack(audioPlayerManager: AudioPlayerManager, message: String): AudioTrack {
+        val bais = ByteArrayInputStream(Base64.getDecoder().decode(message))
+        return audioPlayerManager.decodeTrack(MessageInput(bais)).decodedTrack
+            ?: throw IllegalStateException("Failed to decode track due to a mismatching version or missing source manager")
+    }
 
     @GetMapping("/v4/sessions/{sessionId}/players/{guildId}/track/lyrics")
     fun loadCurrentTrackLyrics(
@@ -58,12 +67,12 @@ class AudioLyricsRestHandler(
     @GetMapping("/v4/lyrics")
     fun loadLyrics(
         request: HttpServletRequest,
-        @RequestParam encodedTrack: String,
+        @RequestParam track: String,
         @RequestParam skipTrackSource: Boolean = false
     ): ResponseEntity<Lyrics> {
-        log.debug("loadLyrics called with encodedTrack: {}, skipTrackSource: {}", encodedTrack, skipTrackSource)
-        val track = decodeTrack(audioPlayerManager, encodedTrack)
-        val lyrics = lyricsManager.loadLyrics(track, skipTrackSource)
+        log.debug("loadLyrics called with track: {}, skipTrackSource: {}", track, skipTrackSource)
+        val decodedTrack = decodeTrack(audioPlayerManager, track)
+        val lyrics = lyricsManager.loadLyrics(decodedTrack, skipTrackSource)
 
         return if (lyrics != null) {
             ResponseEntity.ok(lyrics.toLyrics(pluginInfoModifiers))
