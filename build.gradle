@@ -68,21 +68,20 @@ subprojects {
                     }
                 }
             }
-            // not yet
-//            if (isLavalinkMavenDefined && name == "plugin") {
-//                System.out.println("Publishing to Lavalink Maven Repo")
-//                def lavalinkSnapshots = "https://maven.lavalink.dev/snapshots"
-//                def lavalinkReleases = "https://maven.lavalink.dev/releases"
-//
-//                maven {
-//                    name = "Reposilite-Lavalink"
-//                    url = isSnapshot ? lavalinkSnapshots : lavalinkReleases
-//                    credentials {
-//                        username = findProperty("LAVALINK_MAVEN_USERNAME")
-//                        password = findProperty("LAVALINK_MAVEN_PASSWORD")
-//                    }
-//                }
-//            }
+            if (isLavalinkMavenDefined && name == "plugin") {
+                System.out.println("Publishing to Lavalink Maven Repo")
+                def lavalinkSnapshots = "https://maven.lavalink.dev/snapshots"
+                def lavalinkReleases = "https://maven.lavalink.dev/releases"
+
+                maven {
+                    name = "Reposilite-Lavalink"
+                    url = isSnapshot ? lavalinkSnapshots : lavalinkReleases
+                    credentials {
+                        username = findProperty("LAVALINK_MAVEN_USERNAME")
+                        password = findProperty("LAVALINK_MAVEN_PASSWORD")
+                    }
+                }
+            }
         }
     }
 }
