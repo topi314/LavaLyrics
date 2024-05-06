@@ -5,7 +5,7 @@
 LavaLyrics is a lyrics module for [Lavaplayer](https://github.com/sedmelluq/lavaplayer) and [Lavalink](https://github.com/lavalink-devs/Lavalink).
 It allows registering different lyrics sources and handles fetching from said sources.
 
-You can use this module with Lavaplayer or as a plugin for Lavalink v4.0.5 or higher. Other plugins can link into this module to provide additional lyrics sources.
+You can use this module with Lavaplayer or as a plugin for Lavalink `v4.0.5` or higher. Other plugins can link into this module to provide additional lyrics sources.
 
 <details>
 <summary>Table of Contents</summary>
@@ -40,7 +40,7 @@ Replace x.y.z with the latest version number
 lavalink:
   plugins:
     - dependency: "com.github.topi314.lavalyrics:lavalyrics-plugin:x.y.z"
-      snapshot: false # set to true if you want to use snapshot builds (see below)
+    #  snapshot: false # set to true if you want to use snapshot builds (see below)
 ```
 
 Snapshot builds are available in https://maven.lavalink.dev/snapshots with the short commit hash as the version

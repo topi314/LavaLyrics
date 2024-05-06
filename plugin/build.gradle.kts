@@ -11,8 +11,8 @@ base {
 
 lavalinkPlugin {
     name = "lavalyrics-plugin"
-    apiVersion = gitHash("78c090c4a44860cfee781ee20e1db391b169a7ce")
-    serverVersion = gitHash("78c090c4a44860cfee781ee20e1db391b169a7ce")
+    apiVersion = "4.0.5"
+    serverVersion = "4.0.5"
     configurePublishing = false
 }
 
