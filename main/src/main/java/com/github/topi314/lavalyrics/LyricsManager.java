@@ -57,9 +57,10 @@ public class LyricsManager {
 			throw new IllegalStateException("No lyrics managers registered");
 		}
 		if (!skipTrackSource) {
-			var trackLyricsManager = track.getSourceManager();
-			if (trackLyricsManager instanceof AudioLyricsManager) {
-				var lyrics = ((AudioLyricsManager) trackLyricsManager).loadLyrics(track);
+			var trackLyricsManagerName = track.getSourceManager().getSourceName();
+			var trackLyricsManager = this.lyricsManagers.stream().filter(audioLyricsManager -> audioLyricsManager.getSourceName().equals(trackLyricsManagerName)).findFirst();
+			if (trackLyricsManager.isPresent()) {
+				var lyrics = trackLyricsManager.get().loadLyrics(track);
 				if (lyrics != null) {
 					return lyrics;
 				}
