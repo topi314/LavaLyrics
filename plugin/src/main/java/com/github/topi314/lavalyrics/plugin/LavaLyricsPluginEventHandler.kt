@@ -38,12 +38,12 @@ class LavaLyricsPluginEventHandler(
     }
 
     class PlayerListener(
-        val plugin: LavaLyricsPluginEventHandler,
-        val socketContext: ISocketContext,
-        val guildId: Long,
+        private val plugin: LavaLyricsPluginEventHandler,
+        private val socketContext: ISocketContext,
+        private val guildId: Long,
     ) : AudioEventAdapter() {
         override fun onTrackStart(player: AudioPlayer, track: AudioTrack) {
-            if (plugin.subscribedPlayers[socketContext.sessionId]?.contains(guildId)!!) {
+            if (!plugin.subscribedPlayers[socketContext.sessionId]?.contains(guildId)!!) {
                 return
             }
 
