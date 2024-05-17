@@ -22,8 +22,7 @@ class LineHandler(
             return
         }
 
-        val line = lines[currentLine]
-        context.sendMessage(LyricsLineEvent.serializer(), LyricsLineEvent(guildId.toString(), line.toLine(pluginInfoModifiers)))
+        context.sendMessage(LyricsLineEvent.serializer(), LyricsLineEvent(guildId.toString(), currentLine, lines[currentLine].toLine(pluginInfoModifiers)))
 
         currentLine++
         if (this.currentLine < lines.size) {

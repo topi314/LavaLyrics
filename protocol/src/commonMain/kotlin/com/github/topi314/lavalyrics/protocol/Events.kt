@@ -29,6 +29,7 @@ data class LyricsNotFoundEvent(
 @Serializable
 data class LyricsLineEvent(
     val guildId: String,
+    val lineIndex: Int,
     val line: Line
 ) {
     @EncodeDefault(EncodeDefault.Mode.ALWAYS)
