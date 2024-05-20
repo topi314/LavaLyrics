@@ -6,6 +6,7 @@ import com.github.topi314.lavalyrics.protocol.LyricsLineEvent
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.TrackMarker
 import com.sedmelluq.discord.lavaplayer.track.TrackMarkerHandler
+import com.sedmelluq.discord.lavaplayer.track.TrackMarkerHandler.MarkerState
 import dev.arbjerg.lavalink.api.ISocketContext
 
 class LineHandler(
@@ -17,12 +18,13 @@ class LineHandler(
 ) : TrackMarkerHandler {
     private var currentLine = 0
 
-    override fun handle(state: TrackMarkerHandler.MarkerState) {
-        if (!(state == TrackMarkerHandler.MarkerState.REACHED || state == TrackMarkerHandler.MarkerState.LATE || state == TrackMarkerHandler.MarkerState.BYPASSED)) {
+    override fun handle(state: MarkerState) {
+        if (!(state == MarkerState.REACHED || state == MarkerState.LATE || state == MarkerState.BYPASSED)) {
             return
         }
 
-        context.sendMessage(LyricsLineEvent.serializer(), LyricsLineEvent(guildId.toString(), currentLine, lines[currentLine].toLine(pluginInfoModifiers)))
+        val skipped = state == MarkerState.BYPASSED || state == MarkerState.LATE
+        context.sendMessage(LyricsLineEvent.serializer(), LyricsLineEvent(guildId.toString(), currentLine, lines[currentLine].toLine(pluginInfoModifiers), skipped))
 
         currentLine++
         if (this.currentLine < lines.size) {

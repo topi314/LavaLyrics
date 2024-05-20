@@ -30,7 +30,8 @@ data class LyricsNotFoundEvent(
 data class LyricsLineEvent(
     val guildId: String,
     val lineIndex: Int,
-    val line: Line
+    val line: Line,
+    val skipped: Boolean,
 ) {
     @EncodeDefault(EncodeDefault.Mode.ALWAYS)
     val op: String = "event"
