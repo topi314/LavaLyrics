@@ -21,7 +21,7 @@ You can use this module with Lavaplayer or as a plugin for Lavalink `v4.0.5` or 
 
 ## Supported Sources
 
-* [LavaSrc](https://github.com/topi314/LavaSrc) (YouTube/YouTubeMusic, Deezer, Spotify)
+* [LavaSrc](https://github.com/topi314/LavaSrc) (YouTube/YouTubeMusic, Deezer, Spotify, YandexMusic)
 * [Java Timed Lyrics](https://github.com/DuncteBot/java-timed-lyrics/) (YouTube/YouTubeMusic, Genius)
 
 *Add your own*
@@ -60,6 +60,7 @@ plugins:
       - spotify
       - youtube
       - deezer
+      - yandexMusic
 ```
 
 ### API
@@ -198,7 +199,7 @@ Response:
 204 No Content:
 
 - If no lyrics were found
-- 
+
 ## Lavaplayer Usage
 Replace x.y.z with the latest version number
 
