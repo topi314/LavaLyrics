@@ -5,6 +5,7 @@ plugins:
       - spotify
       - youtube
       - deezer
+      - yandexMusic
 
 server: # REST and WS server
   port: 2333
