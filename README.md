@@ -247,4 +247,32 @@ dependencies {
 
 ### Usage
 
-// TODO
+Register `Lyrics Manager`:
+```java
+LyricsManager lyricsManager = new LyricsManager();
+```
+Register soruces:
+```java
+
+var spotify = new SpotifySourceManager(clientId, clientSecret, spDc, countryCode, () -> audioPlayerManager, DefaultMirroringAudioTrackResolver)
+var youtube = new YoutubeSearchManager(() -> audioPlayerManager, region);
+
+lyricsManager.registerLyricsManager(spotify);
+lyricsManager.registerLyricsManager(youtube);
+```
+
+Basic and example usage:
+```java
+var audioLyrics = lyricsManager.loadLyrics(AudioTrack, skipTrackSource);
+```
+Then you can do what you want with this:
+```java
+List<AudioLyrics.Line> lines = audioLyrics.getLines();
+if (lines != null) {
+        StringBuilder sb = new StringBuilder();
+        for (AudioLyrics.Line line : lines) {
+          sb.append(line.getLine()).append("\n");
+        }
+}
+System.out.println(sb); // Output: Line by line text
+```
