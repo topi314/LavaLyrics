@@ -247,24 +247,16 @@ dependencies {
 
 ### Usage
 
-Register `Lyrics Manager`:
+Create new `Lyrics Manager`:
 ```java
-LyricsManager lyricsManager = new LyricsManager();
-```
-Register soruces:
-```java
-
-var spotify = new SpotifySourceManager(clientId, clientSecret, spDc, countryCode, () -> audioPlayerManager, DefaultMirroringAudioTrackResolver)
-var youtube = new YoutubeSearchManager(() -> audioPlayerManager, region);
-
-lyricsManager.registerLyricsManager(spotify);
-lyricsManager.registerLyricsManager(youtube);
+var lyricsManager = new LyricsManager();
 ```
 
 Basic and example usage:
 ```java
 var audioLyrics = lyricsManager.loadLyrics(AudioTrack, skipTrackSource);
 ```
+
 Then you can do what you want with this:
 ```java
 List<AudioLyrics.Line> lines = audioLyrics.getLines();
