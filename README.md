@@ -247,4 +247,27 @@ dependencies {
 
 ### Usage
 
-// TODO
+Create new `LyricsManager`:
+```java
+var lyricsManager = new LyricsManager();
+
+// register your lyrics sources
+lyricsManager.registerLyricsManager(source);
+```
+
+Basic and example usage:
+```java
+var audioLyrics = lyricsManager.loadLyrics(AudioTrack, skipTrackSource);
+```
+
+Then you can do what you want with this:
+```java
+List<AudioLyrics.Line> lines = audioLyrics.getLines();
+if (lines != null) {
+        StringBuilder sb = new StringBuilder();
+        for (AudioLyrics.Line line : lines) {
+          sb.append(line.getLine()).append("\n");
+        }
+}
+System.out.println(sb); // Output: Line by line text
+```
