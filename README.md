@@ -247,9 +247,12 @@ dependencies {
 
 ### Usage
 
-Create new `Lyrics Manager`:
+Create new `LyricsManager`:
 ```java
 var lyricsManager = new LyricsManager();
+
+// register your lyrics sources
+lyricsManager.registerLyricsManager(source);
 ```
 
 Basic and example usage:
