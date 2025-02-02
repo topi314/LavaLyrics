@@ -12,6 +12,7 @@ import com.sedmelluq.discord.lavaplayer.track.TrackMarker
 import dev.arbjerg.lavalink.api.ISocketContext
 import dev.arbjerg.lavalink.api.ISocketServer
 import jakarta.servlet.http.HttpServletRequest
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -30,7 +31,7 @@ class LavaLyricsPlugin(
 ) {
 
     companion object {
-        val log = LoggerFactory.getLogger(LavaLyricsPlugin::class.java)
+        val log: Logger = LoggerFactory.getLogger(LavaLyricsPlugin::class.java)
 
         fun socketContext(socketServer: ISocketServer, sessionId: String) =
             socketServer.sessions[sessionId] ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found")
@@ -45,23 +46,31 @@ class LavaLyricsPlugin(
         }
     }
 
+    init {
+        log.info("Loading LavaLyrics plugin...")
+    }
+
     @PostMapping("/v4/sessions/{sessionId}/players/{guildId}/lyrics/subscribe")
     fun subscribeToLyrics(
-        request: HttpServletRequest,
         @PathVariable sessionId: String,
-        @PathVariable guildId: String
+        @PathVariable guildId: String,
+        @RequestParam skipTrackSource: Boolean = false
     ): ResponseEntity<Void> {
-        log.debug("subscribeToLyrics called with sessionId: {}, guildId: {}", sessionId, guildId)
-        if (lavaLyricsPluginEventHandler.subscribedPlayers[sessionId]?.add(guildId.toLong()) == false) {
+        log.debug("session {} guild {} subscribed to lyrics (skipTrackSource: {})", sessionId, guildId, skipTrackSource)
+
+        val config = LavaLyricsPluginEventHandler.LyricsSubscriptionConfig(skipTrackSource)
+
+        if (lavaLyricsPluginEventHandler.subscribedPlayers[sessionId]?.set(guildId.toLong(), config) != null) {
             return ResponseEntity.noContent().build()
         }
+
         val socketContext = socketContext(socketServer, sessionId)
         val player = existingPlayer(socketContext, guildId.toLong())
         if (player.track == null) {
             return ResponseEntity.noContent().build()
         }
 
-        val lyrics = lyricsManager.loadLyrics(player.track, false)
+        val lyrics = lyricsManager.loadLyrics(player.track, config.skipTrackSource)
         if (lyrics == null || lyrics.lines == null || lyrics.lines!!.isEmpty()) {
             socketContext.sendMessage(LyricsNotFoundEvent.serializer(), LyricsNotFoundEvent(guildId))
             return ResponseEntity.noContent().build()
@@ -74,20 +83,18 @@ class LavaLyricsPlugin(
         return ResponseEntity.noContent().build()
     }
 
-    @GetMapping("/v4/sessions/{sessionId}/players/{guildId}/unsubscribe")
+    @DeleteMapping("/v4/sessions/{sessionId}/players/{guildId}/lyrics/subscribe")
     fun unsubscribeFromLyrics(
-        request: HttpServletRequest,
         @PathVariable sessionId: String,
         @PathVariable guildId: String
     ): ResponseEntity<Void> {
-        log.debug("unsubscribeFromLyrics called with sessionId: {}, guildId: {}", sessionId, guildId)
+        log.debug("session {} guild {} unsubscribed from lyrics", sessionId, guildId)
         lavaLyricsPluginEventHandler.subscribedPlayers[sessionId]?.remove(guildId.toLong())
         return ResponseEntity.noContent().build()
     }
 
     @GetMapping("/v4/sessions/{sessionId}/players/{guildId}/track/lyrics")
     fun loadCurrentTrackLyrics(
-        request: HttpServletRequest,
         @PathVariable sessionId: String,
         @PathVariable guildId: String,
         @RequestParam skipTrackSource: Boolean = false
@@ -119,6 +126,5 @@ class LavaLyricsPlugin(
             ResponseEntity.ok(lyrics.toLyrics(pluginInfoModifiers))
         } else ResponseEntity.noContent().build()
     }
-
 
 }

@@ -1,6 +1,7 @@
 package com.github.topi314.lavalyrics.protocol
 
 import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 
 @Serializable
