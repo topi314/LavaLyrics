@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("jvm")
-    id("dev.arbjerg.lavalink.gradle-plugin") version "1.0.15"
+    id("dev.arbjerg.lavalink.gradle-plugin") version "1.1.2"
 }
 
 base {
@@ -12,7 +12,7 @@ base {
 lavalinkPlugin {
     name = "lavalyrics-plugin"
     apiVersion = "4.0.5"
-    serverVersion = "4.0.5"
+    serverVersion = "4.0.8"
     configurePublishing = false
 }
 
@@ -26,10 +26,15 @@ kotlin {
     }
 }
 
+tasks.named("jar") {
+    dependsOn(":plugin-api:jar")
+    dependsOn(":main:jar")
+}
+
 dependencies {
-    implementation(project(":main"))
-    implementation(project(":protocol"))
-    implementation(project(":plugin-api"))
+    implementation(projects.main)
+    implementation(projects.protocol)
+    implementation(projects.pluginApi)
 }
 
 publishing {

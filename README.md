@@ -55,8 +55,7 @@ The plugin can be configured in the `application.yml` file as follows:
 ```yaml
 plugins:
   lavalyrics:
-    # sources is used to sort the different lyrics sources by priority (from highest to lowest)
-    sources:
+    sources: # The order in which the lyrics sources will be queried
       - spotify
       - youtube
       - deezer

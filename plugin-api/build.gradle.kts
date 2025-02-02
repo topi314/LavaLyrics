@@ -23,7 +23,7 @@ java {
 }
 
 dependencies {
-    api(project(":main"))
+    api(projects.main)
     api("org.jetbrains:annotations:24.0.1")
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 }

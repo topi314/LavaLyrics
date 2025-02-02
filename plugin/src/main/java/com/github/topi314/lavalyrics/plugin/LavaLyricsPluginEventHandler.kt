@@ -19,10 +19,10 @@ class LavaLyricsPluginEventHandler(
     private val pluginInfoModifiers: List<LyricsPluginInfoModifier>
 ) : PluginEventHandler() {
 
-    val subscribedPlayers = mutableMapOf<String, MutableSet<Long>>()
+    val subscribedPlayers = mutableMapOf<String, MutableMap<Long, LyricsSubscriptionConfig>>()
 
     override fun onWebSocketOpen(context: ISocketContext, resumed: Boolean) {
-        this.subscribedPlayers[context.sessionId] = mutableSetOf()
+        this.subscribedPlayers[context.sessionId] = mutableMapOf()
     }
 
     override fun onSocketContextDestroyed(context: ISocketContext) {
@@ -43,11 +43,9 @@ class LavaLyricsPluginEventHandler(
         private val guildId: Long,
     ) : AudioEventAdapter() {
         override fun onTrackStart(player: AudioPlayer, track: AudioTrack) {
-            if (!plugin.subscribedPlayers[socketContext.sessionId]?.contains(guildId)!!) {
-                return
-            }
+            val config: LyricsSubscriptionConfig = plugin.subscribedPlayers[socketContext.sessionId]?.get(guildId) ?: return
 
-            val lyrics = plugin.lyricsManager.loadLyrics(track, false)
+            val lyrics = plugin.lyricsManager.loadLyrics(track, config.skipTrackSource)
             if (lyrics == null || lyrics.lines == null || lyrics.lines!!.isEmpty()) {
                 socketContext.sendMessage(LyricsNotFoundEvent.serializer(), LyricsNotFoundEvent(guildId.toString()))
                 return
@@ -60,4 +58,9 @@ class LavaLyricsPluginEventHandler(
         }
 
     }
+
+    data class LyricsSubscriptionConfig(
+        val skipTrackSource: Boolean
+    )
+
 }
