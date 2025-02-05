@@ -72,20 +72,20 @@ Fields marked with `?` are optional and types marked with `?` are nullable.
 
 ##### Lyrics Object
 
-| Name       | Type                               | Description                                                        |
-|------------|------------------------------------|--------------------------------------------------------------------|
-| sourceName | string                             | The name of the source where the lyrics were fetched from          |
-| provider   | string                             | The name of the provider the lyrics was fetched from on the source |
-| text       | ?string                            | The lyrics text                                                    |
-| lines      | Array of [LyricsLine](#lyricsline) | The lyrics lines                                                   |
-| plugin     | object                             | Additional plugin specific data                                    |
+| Name       | Type                                | Description                                                        |
+|------------|-------------------------------------|--------------------------------------------------------------------|
+| sourceName | string                              | The name of the source where the lyrics were fetched from          |
+| provider   | ?string                             | The name of the provider the lyrics was fetched from on the source |
+| text       | ?string                             | The lyrics text                                                    |
+| lines      | ?array of [LyricsLine](#lyricsline) | The lyrics lines                                                   |
+| plugin     | object                              | Additional plugin specific data                                    |
 
 ##### LyricsLine
 
 | Name      | Type   | Description                               |
 |-----------|--------|-------------------------------------------|
 | timestamp | int    | The timestamp of the line in milliseconds |
-| duration  | int    | The duration of the line in milliseconds  |
+| duration  | ?int   | The duration of the line in milliseconds  |
 | line      | string | The lyrics line                           |
 | plugin    | object | Additional plugin specific data           |
 
