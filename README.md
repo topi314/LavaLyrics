@@ -5,7 +5,7 @@
 LavaLyrics is a lyrics module for [Lavaplayer](https://github.com/sedmelluq/lavaplayer) and [Lavalink](https://github.com/lavalink-devs/Lavalink).
 It allows registering different lyrics sources and handles fetching from said sources.
 
-You can use this module with Lavaplayer or as a plugin for Lavalink `v4.0.5` or higher. Other plugins can link into this module to provide additional lyrics sources.
+You can use this module with Lavaplayer or as a plugin for Lavalink `v4.0.8` or higher. Other plugins can link into this module to provide additional lyrics sources.
 
 <details>
 <summary>Table of Contents</summary>
@@ -28,7 +28,7 @@ You can use this module with Lavaplayer or as a plugin for Lavalink `v4.0.5` or 
 
 ## Lavalink Usage
 
-This plugin requires Lavalink `v4.0.5` or higher.
+This plugin requires Lavalink `v4.0.8` or higher.
 
 To install this plugin either download the latest release and place it into your `plugins` folder or add the following into your `application.yml`
 
