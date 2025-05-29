@@ -71,15 +71,15 @@ Fields marked with `?` are optional and types marked with `?` are nullable.
 
 ##### Lyrics Object
 
-| Name       | Type                                | Description                                                        |
-|------------|-------------------------------------|--------------------------------------------------------------------|
-| sourceName | string                              | The name of the source where the lyrics were fetched from          |
-| provider   | ?string                             | The name of the provider the lyrics was fetched from on the source |
-| text       | ?string                             | The lyrics text                                                    |
-| lines      | ?array of [LyricsLine](#lyricsline) | The lyrics lines                                                   |
-| plugin     | object                              | Additional plugin specific data                                    |
+| Name       | Type                                 | Description                                                        |
+|------------|--------------------------------------|--------------------------------------------------------------------|
+| sourceName | string                               | The name of the source where the lyrics were fetched from          |
+| provider   | string                               | The name of the provider the lyrics was fetched from on the source |
+| text       | ?string                              | The lyrics text                                                    |
+| lines      | Array of [Lyrics Line](#lyrics-line) | The lyrics lines                                                   |
+| plugin     | object                               | Additional plugin specific data                                    |
 
-##### LyricsLine
+##### Lyrics Line
 
 | Name      | Type   | Description                               |
 |-----------|--------|-------------------------------------------|
@@ -87,6 +87,45 @@ Fields marked with `?` are optional and types marked with `?` are nullable.
 | duration  | ?int   | The duration of the line in milliseconds  |
 | line      | string | The lyrics line                           |
 | plugin    | object | Additional plugin specific data           |
+
+#### Events
+
+LavaLyrics supports live lyrics events. You can subscribe to these events to get live lines for the lyrics of the current playing track.
+
+For the base fields of the events see the [Lavalink Docs](https://lavalink.dev/api/websocket.html#event-op)
+
+##### Event Types
+
+| Name                  | Description                                                               |
+|-----------------------|---------------------------------------------------------------------------|
+| `LyricsFoundEvent`    | Sent when lyrics are found for a track and about to be sent to the client |
+| `LyricsNotFoundEvent` | Sent when no lyrics were found for a track                                |
+| `LyricsLineEvent`     | Sent when a new lyrics line is available for a track                      |
+
+##### LyricsFoundEvent
+
+This event is sent when lyrics are found for a track and about to be sent to the client.
+
+| Name   | Type                            | Description                                                |
+|--------|---------------------------------|------------------------------------------------------------|
+| lyrics | [Lyrics Object](#lyrics-object) | The lyrics object containing the lyrics lines and metadata |
+
+
+##### LyricsNotFoundEvent
+
+This event is sent when no lyrics were found for a track.
+
+This event does not contain any additional fields.
+
+##### LyricsLineEvent
+
+This event is sent when a new lyrics line is reached for a track.
+
+| Name      | Type                        | Description                                             |
+|-----------|-----------------------------|---------------------------------------------------------|
+| lineIndex | int                         | The index of the line in the lyrics lines array         |
+| line      | [Lyrics Line](#lyrics-line) | The lyrics line object containing the line and metadata |
+| skipped   | boolean                     | Whether the line was skipped due to seeking             |
 
 #### Get current playing track lyrics
 
@@ -198,6 +237,39 @@ Response:
 204 No Content:
 
 - If no lyrics were found
+
+### Subscribe to live lyrics
+
+You can subscribe to live lyrics lines for a given player.
+
+```http
+POST /v4/sessions/{sessionId}/players/{guildId}/lyrics/subscribe?skipTrackSource={skipTrackSource}
+```
+
+Query Params:
+
+| Name            | Type    | Description                                                          |
+|-----------------|---------|----------------------------------------------------------------------|
+| skipTrackSource | boolean | Skip the current track source and fetch from highest priority source |
+
+Response:
+
+204 No Content:
+- If the subscription was successful
+
+#### Unsubscribe from live lyrics
+
+You can unsubscribe from live lyrics lines for a given player.
+
+```http
+DELETE /v4/sessions/{sessionId}/players/{guildId}/lyrics/subscribe
+```
+
+Response:
+204 No Content:
+- If the unsubscription was successful
+
+---
 
 ## Lavaplayer Usage
 Replace x.y.z with the latest version number
