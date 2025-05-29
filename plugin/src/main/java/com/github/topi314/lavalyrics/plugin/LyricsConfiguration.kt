@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration
 open class LyricsConfiguration(
     val config: LavaLyricsConfig
 ) {
+
     @Bean
     open fun audioLyricsManagerSupplier(lyricsManagerConfigurations: Collection<LyricsManagerConfiguration>): LyricsManager {
         var manager = LyricsManager()

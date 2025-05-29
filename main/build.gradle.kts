@@ -17,6 +17,7 @@ java {
 
 dependencies {
     compileOnly("dev.arbjerg:lavaplayer:2.0.4")
+    compileOnly("org.slf4j:slf4j-api:2.0.7")
     compileOnly("org.jetbrains:annotations:24.0.1")
     implementation("org.jetbrains.kotlin:kotlin-annotations-jvm:1.9.0")
 }

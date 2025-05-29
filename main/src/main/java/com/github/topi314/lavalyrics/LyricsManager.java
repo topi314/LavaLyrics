@@ -3,14 +3,18 @@ package com.github.topi314.lavalyrics;
 import com.github.topi314.lavalyrics.lyrics.AudioLyrics;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LyricsManager {
 
+	private static final Logger log = LoggerFactory.getLogger(LyricsManager.class);
 	private final List<AudioLyricsManager> lyricsManagers;
 
 	public LyricsManager() {
@@ -22,7 +26,9 @@ public class LyricsManager {
 	}
 
 	public void sortLyricsManagers(List<String> lyricsManagers) {
+		log.info("Sorting lyrics managers");
 		this.lyricsManagers.sort(Comparator.comparing(audioLyricsManager -> lyricsManagers.contains(audioLyricsManager.getSourceName())));
+		log.info("Sorted lyrics managers");
 	}
 
 	@Nullable
