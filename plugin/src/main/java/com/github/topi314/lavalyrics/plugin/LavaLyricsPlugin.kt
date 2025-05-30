@@ -11,7 +11,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.TrackMarker
 import dev.arbjerg.lavalink.api.ISocketContext
 import dev.arbjerg.lavalink.api.ISocketServer
-import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -60,7 +59,7 @@ class LavaLyricsPlugin(
 
         val config = LavaLyricsPluginEventHandler.LyricsSubscriptionConfig(skipTrackSource)
 
-        if (lavaLyricsPluginEventHandler.subscribedPlayers[sessionId]?.set(guildId.toLong(), config) != null) {
+        if (lavaLyricsPluginEventHandler.subscribedPlayers[sessionId]?.set(guildId.toLong(), config) == null) {
             return ResponseEntity.noContent().build()
         }
 
@@ -114,7 +113,6 @@ class LavaLyricsPlugin(
 
     @GetMapping("/v4/lyrics")
     fun loadLyrics(
-        request: HttpServletRequest,
         @RequestParam track: String,
         @RequestParam skipTrackSource: Boolean = false
     ): ResponseEntity<Lyrics> {
