@@ -27,7 +27,11 @@ public class LyricsManager {
 
 	public void sortLyricsManagers(List<String> lyricsManagers) {
 		log.info("Sorting lyrics managers");
-		this.lyricsManagers.sort(Comparator.comparing(audioLyricsManager -> lyricsManagers.contains(audioLyricsManager.getSourceName())));
+		// sources in the configured order, sources missing from the config after them
+		this.lyricsManagers.sort(Comparator.comparingInt(audioLyricsManager -> {
+			var index = lyricsManagers.indexOf(audioLyricsManager.getSourceName());
+			return index == -1 ? Integer.MAX_VALUE : index;
+		}));
 		log.info("Sorted lyrics managers");
 	}
 
