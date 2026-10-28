@@ -62,22 +62,50 @@ public class LyricsManager {
 		if (this.lyricsManagers.isEmpty()) {
 			throw new IllegalStateException("No lyrics managers registered");
 		}
+		var exceptions = new ArrayList<RuntimeException>();
+		var attempts = 0;
+		AudioLyricsManager triedLyricsManager = null;
 		if (!skipTrackSource) {
 			var trackLyricsManagerName = track.getSourceManager().getSourceName();
 			var trackLyricsManager = this.lyricsManagers.stream().filter(audioLyricsManager -> audioLyricsManager.getSourceName().equals(trackLyricsManagerName)).findFirst();
 			if (trackLyricsManager.isPresent()) {
-				var lyrics = trackLyricsManager.get().loadLyrics(track);
+				triedLyricsManager = trackLyricsManager.get();
+				attempts++;
+				var lyrics = loadLyrics(triedLyricsManager, track, exceptions);
 				if (lyrics != null) {
 					return lyrics;
 				}
 			}
 		}
 		for (var lyricsManager : this.lyricsManagers) {
-			var lyrics = lyricsManager.loadLyrics(track);
+			if (lyricsManager == triedLyricsManager) {
+				continue;
+			}
+			attempts++;
+			var lyrics = loadLyrics(lyricsManager, track, exceptions);
 			if (lyrics != null) {
 				return lyrics;
 			}
 		}
+		// only fail when every source failed, if one of them answered there are just no lyrics
+		if (!exceptions.isEmpty() && exceptions.size() == attempts) {
+			var exception = exceptions.get(0);
+			for (var i = 1; i < exceptions.size(); i++) {
+				exception.addSuppressed(exceptions.get(i));
+			}
+			throw exception;
+		}
 		return null;
+	}
+
+	@Nullable
+	private AudioLyrics loadLyrics(AudioLyricsManager lyricsManager, AudioTrack track, List<RuntimeException> exceptions) {
+		try {
+			return lyricsManager.loadLyrics(track);
+		} catch (RuntimeException e) {
+			log.warn("Failed to load lyrics from source {}: {}", lyricsManager.getSourceName(), e.getMessage());
+			exceptions.add(e);
+			return null;
+		}
 	}
 }
