@@ -8,7 +8,6 @@ import com.github.topi314.lavalyrics.protocol.LyricsNotFoundEvent
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.tools.io.MessageInput
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import com.sedmelluq.discord.lavaplayer.track.TrackMarker
 import dev.arbjerg.lavalink.api.ISocketContext
 import dev.arbjerg.lavalink.api.ISocketServer
 import org.slf4j.Logger
@@ -65,11 +64,15 @@ class LavaLyricsPlugin(
 
         val socketContext = socketContext(socketServer, sessionId)
         val player = existingPlayer(socketContext, guildId.toLong())
-        if (player.track == null) {
+        val track = player.track ?: return ResponseEntity.noContent().build()
+
+        val lyrics = lyricsManager.loadLyrics(track, config.skipTrackSource)
+
+        // the track can stop or change while the lyrics are loading
+        if (player.track !== track) {
             return ResponseEntity.noContent().build()
         }
 
-        val lyrics = lyricsManager.loadLyrics(player.track, config.skipTrackSource)
         if (lyrics == null || lyrics.lines == null || lyrics.lines!!.isEmpty()) {
             socketContext.sendMessage(LyricsNotFoundEvent.serializer(), LyricsNotFoundEvent(guildId))
             return ResponseEntity.noContent().build()
@@ -77,8 +80,7 @@ class LavaLyricsPlugin(
 
         socketContext.sendMessage(LyricsFoundEvent.serializer(), LyricsFoundEvent(guildId, lyrics.toLyrics(pluginInfoModifiers)))
 
-        // Add a marker for the first line
-        player.track?.addMarker(TrackMarker(lyrics.lines!![0].timestamp.toMillis(), LineHandler(socketContext, pluginInfoModifiers, guildId.toLong(), player.track!!, lyrics.lines!!)))
+        lavaLyricsPluginEventHandler.startLines(socketContext, guildId.toLong(), track, lyrics.lines!!)
         return ResponseEntity.noContent().build()
     }
 
